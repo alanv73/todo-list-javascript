@@ -102,9 +102,13 @@ function completeTask(buttonElement) {
     let textElement = taskElement.querySelector(".item-text");
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-    taskElement.addEventListener("animationend", () => {
-        taskElement.classList.remove("animate__animated", "animate__shakeX");
-    });
+    taskElement.addEventListener(
+        "animationend",
+        () => {
+            taskElement.classList.remove("animate__animated", "animate__shakeX");
+        },
+        { once: true }
+    );
 
     taskElement.classList.remove("animate__animated", "animate__bounceInUp");
     taskElement.classList.add("animate__animated", "animate__shakeX");
@@ -131,9 +135,13 @@ function updateTask(buttonElement) {
     let textElement = taskElement.querySelector(".item-text");
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-    taskElement.addEventListener("animationend", () => {
-        taskElement.classList.remove("animate__animated", "animate__pulse");
-    });
+    taskElement.addEventListener(
+        "animationend",
+        () => {
+            taskElement.classList.remove("animate__animated", "animate__pulse");
+        },
+        { once: true }
+    );
 
     taskElement.classList.remove("animate__animated", "animate__bounceInUp");
     taskElement.classList.add("animate__animated", "animate__pulse");
