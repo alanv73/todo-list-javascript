@@ -1,6 +1,11 @@
 let input = document.getElementById("task-input");
 let add_btn = document.getElementById("add-task-btn");
 let draggedTask;
+let tasks;
+
+Array.prototype.move = function (from, to) {
+    this.splice(to, 0, this.splice(from, 1)[0]);
+};
 
 function dragStart(event) {
     draggedTask = event.target;
@@ -21,18 +26,26 @@ function dragOver(event) {
 function drop(event) {
     event.preventDefault();
     const targetTask = event.target.closest(".task");
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+
     if (targetTask && targetTask !== draggedTask) {
         const taskList = targetTask.parentNode;
         const taskListItems = Array.from(taskList.children);
         const draggedIndex = taskListItems.indexOf(draggedTask);
         const targetIndex = taskListItems.indexOf(targetTask);
+
         if (draggedIndex > targetIndex) {
             taskList.insertBefore(draggedTask, targetTask);
         } else {
             taskList.insertBefore(draggedTask, targetTask.nextSibling);
         }
+
+        tasks.move(draggedIndex, targetIndex);
     }
+
     targetTask.classList.remove("dragover");
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 function dragEnd(event) {
