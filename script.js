@@ -1,7 +1,44 @@
 let input = document.getElementById("task-input");
 let add_btn = document.getElementById("add-task-btn");
+let draggedTask;
 
-window.onload = renderTodo;
+function dragStart(event) {
+    draggedTask = event.target;
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", draggedTask.innerHTML);
+    draggedTask.classList.add("dragging");
+}
+
+function dragOver(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+    const targetTask = event.target.closest(".task");
+    if (targetTask && targetTask !== draggedTask) {
+        targetTask.classList.add("dragover");
+    }
+}
+
+function drop(event) {
+    event.preventDefault();
+    const targetTask = event.target.closest(".task");
+    if (targetTask && targetTask !== draggedTask) {
+        const taskList = targetTask.parentNode;
+        const taskListItems = Array.from(taskList.children);
+        const draggedIndex = taskListItems.indexOf(draggedTask);
+        const targetIndex = taskListItems.indexOf(targetTask);
+        if (draggedIndex > targetIndex) {
+            taskList.insertBefore(draggedTask, targetTask);
+        } else {
+            taskList.insertBefore(draggedTask, targetTask.nextSibling);
+        }
+    }
+    targetTask.classList.remove("dragover");
+}
+
+function dragEnd(event) {
+    event.preventDefault();
+    draggedTask.classList.remove("dragging");
+}
 
 let addTask = function () {
     if (input.value.length < 1) {
@@ -31,6 +68,11 @@ let addTask = function () {
     `;
 
     document.getElementById("task-list").appendChild(task);
+    task.setAttribute("draggable", "true");
+    task.addEventListener("dragstart", dragStart);
+    task.addEventListener("dragover", dragOver);
+    task.addEventListener("drop", drop);
+    task.addEventListener("dragend", dragEnd);
 
     input.value = "";
 };
@@ -73,6 +115,11 @@ function renderTodo() {
         }
 
         document.getElementById("task-list").appendChild(task);
+        task.setAttribute("draggable", "true");
+        task.addEventListener("dragstart", dragStart);
+        task.addEventListener("dragover", dragOver);
+        task.addEventListener("drop", drop);
+        task.addEventListener("dragend", dragEnd);
     }
 }
 
@@ -156,3 +203,5 @@ function updateTask(buttonElement) {
         localStorage.setItem("tasks", JSON.stringify(tasks));
     }
 }
+
+window.onload = renderTodo;

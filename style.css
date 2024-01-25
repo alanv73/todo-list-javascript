@@ -140,6 +140,14 @@ body {
     --animate-duration: 2s;
 }
 
+.task.dragging {
+    opacity: 0.5;
+}
+
+/* .task.dragover {
+    border: 2px dashed #ff9900;
+} */
+
 @media screen and (max-width: 600px) {
     .input-form {
         flex-direction: column;
