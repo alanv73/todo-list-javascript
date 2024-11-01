@@ -208,7 +208,7 @@ function updateTask(buttonElement) {
 
     let indexToUpdate = tasks.findIndex((task) => task.text === textElement.textContent);
 
-    const updatedTask = prompt("Update your Task:", textElement.textContent);
+    const updatedTask = prompt("Edit your Task:", textElement.textContent);
 
     if (updatedTask !== null && updatedTask !== "") {
         tasks[indexToUpdate].text = updatedTask;
