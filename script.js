@@ -1,5 +1,8 @@
 let input = document.getElementById("task-input");
 let add_btn = document.getElementById("add-task-btn");
+let save_btn = document.getElementById("save-tasks-btn");
+let load_btn = document.getElementById("load-tasks-btn");
+let fileInput = document.getElementById("fileInput");
 let draggedTask;
 let tasks;
 
@@ -99,6 +102,18 @@ input.addEventListener("keydown", (event) => {
 
 add_btn.addEventListener("click", () => {
     addTask();
+});
+
+save_btn.addEventListener("click", () => {
+    saveTasks();
+});
+
+load_btn.addEventListener("click", () => {
+    fileInput.classList.toggle("unhide");
+});
+
+fileInput.addEventListener("click", () => {
+    loadTasks();
 });
 
 function renderTodo() {
@@ -215,6 +230,32 @@ function updateTask(buttonElement) {
         textElement.textContent = updatedTask;
         localStorage.setItem("tasks", JSON.stringify(tasks));
     }
+}
+
+function saveTasks() {
+    let tasks = localStorage.getItem("tasks"); //JSON.stringify(localStorage, null, 4);
+    saveTextAs(tasks, "tasks.txt");
+}
+
+function loadTasks() {
+    fileInput.classList.toggle("unhide");
+    fileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+
+        // Do something with the file, e.g., read its contents
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            const fileContent = e.target.result;
+            // Process the file content
+            localStorage.clear();
+            localStorage.setItem("tasks", fileContent);
+            renderTodo();
+            window.location.reload();
+        };
+
+        reader.readAsText(file); // Read the file as text
+    });
 }
 
 window.onload = renderTodo;
